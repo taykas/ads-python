@@ -1,7 +1,6 @@
 # entrada de dados
 data_nascimento = input("Digite sua data de nascimento (dd/mm/aaaa): ")
 
-
 # obtém a data atual
 data_atual = input("Digite o dia de hoje (dd/mm/aaaa): ")
 
