@@ -6,3 +6,4 @@ lista_organizada = sorted(lista, reverse=True)
 print(lista_organizada)
 
 for i in range(len(lista_organizada)):
+    
