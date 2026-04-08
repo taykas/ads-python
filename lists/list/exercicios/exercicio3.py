@@ -13,9 +13,7 @@ meses = [
 ]
 
 lista_temp = []
-
 resumo_meses = []
-
 media = 0
 
 for mes in meses:
@@ -24,12 +22,11 @@ for mes in meses:
 
 media = sum(lista_temp) / len(lista_temp)
 
-for i in range(len(meses)):
-    if lista_temp[i] >= media:
-        resumo_meses.append(lista_temp[i],meses[i])
-
-
 print(f"Média de temperatura anual: {media}")
 
-for i in range(len(resumo_meses)):
-    print(f"Meses com maior temp: {resumo_meses[i]}")
+print(f"Meses que tiveram temperatura maior que a média ({media:.1f})")
+
+for i in range(len(meses)):
+    if lista_temp[i] > media:
+        print(f"mes: {meses[i]} - temp: {lista_temp[i]}")
+
