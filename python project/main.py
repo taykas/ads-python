@@ -11,25 +11,31 @@ def carregar_albuns():
         print("\n =-=-= ERRO: Arquivo não encontrado. Um novo será criado automaticamente. =-=-=\n")
         return []
     except json.JSONDecodeError:
-        print("ERRO: O arquivo está vazio ou corrompido. Os dados serão reiniciados.")
+        print("=-=-= ERRO: O arquivo está vazio ou corrompido. Os dados serão reiniciados. =-=-=")
         return []
 
-# Quando QUIT, salva o arquivo
+# Quando QUIT, recebe a lista de albuns e salva o arquivo
 def salvar_albuns(lista):
     with open(ARQUIVO, "w", encoding="utf-8") as f:
         json.dump(lista, f, indent=4, ensure_ascii=False)
 
 albuns = carregar_albuns()
 
+# Gera id simples
+def gerar_id(lista):
+    if not lista:
+        return 1
+    return lista[-1]["id"] + 1
+
 while True:
-    comando = input("\nDigite o comando desejado *ABOUT | ADD | QUIT* -> ").strip().upper()
+    comando = input("\n\nDigite o comando desejado *ABOUT | ADD | LIST | UPDATE | DELETE | QUIT* -> ").strip().upper()
 
     if  not comando:
-        print("\nERRO: Comando vazio! Tente novamente.")
+        print("\n=-=-= ERRO: Comando vazio! Tente novamente. =-=-=")
         continue
 
     if comando.isnumeric():
-        print("\nERRO: Comando não pode ser número!")
+        print("\n=-=-= ERRO: Comando não pode ser número! =-=-=")
         continue
     break
 
@@ -47,23 +53,23 @@ while True:
                     valor = input("\nQuantos álbuns deseja inserir? ").strip()
 
                     if not valor:
-                        print("\nERRO: Valor vazio! Digite um número.")
+                        print("\n=-=-= ERRO: Valor vazio! Digite um número. =-=-=")
                         continue
 
                     if not valor.isdigit():
-                        print("\nERRO: Erro de digitação! Digite apenas números.")
+                        print("\n=-=-= ERRO: Erro de digitação! Digite apenas números. =-=-=")
                         continue
 
                     num = int(valor)
 
                     if num <= 0:
-                        print("\nERRO: Quantidade inválida! O número deve ser maior que zero.")
+                        print("\n=-=-= ERRO: Quantidade inválida! O número deve ser maior que zero. =-=-=")
                         continue
 
                     break
 
                 except ValueError:
-                    print("\nERRO: Erro de conversão! Tente novamente.")
+                    print("\n=-=-= ERRO: Erro de conversão! Tente novamente. =-=-=")
 
             print(f"\nQuantidade Desejada: {num}, perfeito! \n\n=-=-= Cadastro de Álbuns =-=-=")
 
@@ -76,9 +82,71 @@ while True:
                         continue
 
                     break
+                
+                albuns.append({
+                    "id": gerar_id(albuns),
+                    "nome": nome_album,
+                    "status": "pendente"
+                })
 
-                albuns.append(nome_album)
-                print(f"\nÁlbum: {nome_album}, adicionado com sucesso! :)")
+                print(f"\nAdicionado com sucesso! :)")
+
+        case "LIST":
+            if not albuns:
+                print("\nNenhum álbum cadastrado.\n")
+            else:
+                for album in albuns:
+                    print(f"\n=-=-= ID: {album['id']} | Nome: {album['nome']} | Status: {album['status']}")
+
+        case "UPDATE":
+            try:
+                id_busca = int(input("\nDigite o ID do álbum: "))
+            except ValueError:
+                print("=-=-= ERRO: ID inválido! =-=-=")
+                continue
+
+            for album in albuns:
+                if album["id"] == id_busca:
+                    print("\n=-= Escolha o novo status =-=")
+                    print("1 - Concluído")
+                    print("2 - Em andamento")
+
+                    try:
+                        opcao = int(input("Opção: ").strip())
+
+                        if opcao == 1:
+                            novo_status = "concluído"
+                        elif opcao == 2:
+                            novo_status = "em andamento"
+                        else:
+                            print("ERRO: Opção inválida!")
+                            break
+
+                    except ValueError:
+                        print("ERRO: Digite apenas números (1 ou 2)!")
+                        break
+
+                    album["status"] = novo_status
+                    print("Álbum atualizado!")
+                    break
+
+            else:
+                print("=-=-= ERRO: Álbum não encontrado! =-=-=")
+
+        case "DELETE":
+            try:
+                id_busca = int(input("Digite o ID do álbum: "))
+            except ValueError:
+                print("=-=-= ERRO: ID inválido! =-=-=")
+                continue
+
+            for album in albuns:
+                if album["id"] == id_busca:
+                    albuns.remove(album)
+                    print("Álbum removido!")
+                    break
+            else:
+                print("=-=-= ERRO: Álbum não encontrado! =-=-=")
 
         case "QUIT":
             salvar_albuns(albuns)
@@ -87,17 +155,17 @@ while True:
             break
 
         case _:
-            print("\nERRO: Comando inválido! Use: ABOUT | ADD | QUIT")
+            print("\n=-=-= ERRO: Comando inválido! Use: ABOUT | ADD | LIST | UPDATE | DELETE | QUIT =-=-=")
 
     while True:
-        comando = input("\nDigite o comando desejado: ").strip().upper()
+        comando = input("\nDigite o comando desejado *ABOUT | ADD | LIST | UPDATE | DELETE | QUIT* -> ").strip().upper()
 
         if not comando:
-            print("\nERRO: Comando vazio! Tente novamente.")
+            print("\n=-=-= ERRO: Comando vazio! Tente novamente. =-=-=")
             continue
 
         if comando.isnumeric():
-            print("\nERRO: Comando não pode ser número!")
+            print("\n=-=-= ERRO: Comando não pode ser número! =-=-=")
             continue
 
         break
